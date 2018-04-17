@@ -39,7 +39,7 @@ function draw() {
                     plusprochePoint = pointComplet;
                 }
             })
-            ctx.strokeRect(i,j ,1,1);
+            ctx.strokeRect(i,j ,0,0);
             ctx.fillStyle = 'rgb('+plusprochePoint.rvb.R+', '+plusprochePoint.rvb.V+', '+plusprochePoint.rvb.B+')';
             //ctx.fillStyle = 'rgb(255,255,255)';
 
