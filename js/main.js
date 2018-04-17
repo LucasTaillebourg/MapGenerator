@@ -4,64 +4,47 @@ function draw() {
     var canvas = document.getElementById('tutorial');
     var ctx = canvas.getContext('2d');
 
-    var pointNumber = 2;
+    var pointNumber = 500;
     var rectSize = 500;
+
+    ctx.beginPath();
 
     //Création des points
     for(var i =0; i<pointNumber;i++){
-        var rand1 = Math.random() * rectSize;
-        var rand2 = Math.random() * rectSize;
-        var point = {x:((rand1 + "").split('.')[0]), y:((rand2+"").split('.')[0])};
+        var x = Math.random() * rectSize;
+        var y = Math.random() * rectSize;
+        var pointtemp = {x:((x + "").split('.')[0]), y:((y+"").split('.')[0])};
 
-        myPoints.push(point)
+        var Rtemp = ((Math.random() * 255)+"").split('.')[0]
+        var Vtemp = ((Math.random() * 255)+"").split('.')[0]
+        var Btemp = ((Math.random() * 255)+"").split('.')[0]
+        var RVBtemp ={R:Rtemp,V:Vtemp,B:Btemp};
+        pointComplet = {point:pointtemp, rvb:RVBtemp}
+        myPoints.push(pointComplet)
+
+        //create point
+        ctx.strokeRect(pointtemp.x,pointtemp.y ,1,1);
+        ctx.fillRect(pointtemp.x ,pointtemp.y ,1,1);
     }
 
-    //affichage des points
-    ctx.beginPath();
-    myPoints.forEach(function (point) {
-        ctx.strokeRect(point.x,point.y ,1,1);
-        ctx.fillRect(point.x ,point.y ,1,1);
-    });
-    
-    //Calcul des frontières (voronoi)
-    //i, ligne imaginaire qui parcours le rectangle de gauche à droite.
-    
-   for(var i = 0; i<rectSize;i++){
-        myPoints.forEach(function(point){
-            if(point.x == i){
-                //A chaque fois que le balayage touche un point on calcule un truc (qui est pas voronoi pur le moment)
-                var pointGaucheHaut = {x:0, y:0}
-                var pointGaucheBas = {x:0, y:500}
-                ctx.moveTo(point.x,point.y);
-                ctx.lineTo(pointGaucheHaut.x ,pointGaucheHaut.y);
-                ctx.moveTo(point.x,point.y);
-                ctx.lineTo(pointGaucheBas.x ,pointGaucheBas.y);
 
-                myLines.push(p1=point,p2=pointGaucheHaut)
-                myLines.push(p1=point,p2=pointGaucheBas)
+    for(var i = 0; i<rectSize;i++){
+        for(var j = 0; j<rectSize;j++){
+            var plusprochePoint;
+            var distance=10000000;
+            myPoints.forEach(function(pointComplet){
+                var dist = Math.abs(Math.sqrt(Math.pow(i-pointComplet.point.x,2)+Math.pow(j-pointComplet.point.y,2)))
+                if(dist<=distance){
+                    distance=dist;
+                    plusprochePoint = pointComplet;
+                }
+            })
+            ctx.strokeRect(i,j ,1,1);
+            ctx.fillStyle = 'rgb('+plusprochePoint.rvb.R+', '+plusprochePoint.rvb.V+', '+plusprochePoint.rvb.B+')';
+            //ctx.fillStyle = 'rgb(255,255,255)';
 
-            }
-        })
+            ctx.fillRect(i ,j ,1,1);
+        }
     }
-
-    // y = (Ya -Yb / xa-xb) x + b
-    // y2 = (Ya2 -Yb2 / xa2-xb2) x + b2
-    //inter (Ya -Yb / xa-xb) x + b = (Ya2 -Yb2 / xa2-xb2) x + b2
-
-
     ctx.stroke();
-}
-
-function getFirstLineCross(myLines,point){
-    return myLines.forEach(function (line){
-
-        var pointGaucheHaut = {x:0, y:0}
-        var pointGaucheBas = {x:0, y:500}
-
-        l1 = {p1:point, pointGaucheHaut}
-        l1 = {p1:point, pointGaucheBas}
-
-        
-        return "coucou";
-    })
 }
