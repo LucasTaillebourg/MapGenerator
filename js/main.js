@@ -1,50 +1,75 @@
-function draw() {
-    var myPoints = [];
-    var myLines = [];
-    var canvas = document.getElementById('tutorial');
-    var ctx = canvas.getContext('2d');
+const mapGenerator = {};
 
-    var pointNumber = 500;
-    var rectSize = 500;
+window.mapGenerator = mapGenerator;
 
-    ctx.beginPath();
+(function(){
+    function draw() {
+        let myPoints = [];
+        const canvas = document.getElementById('tutorial');
+        const ctx = canvas.getContext('2d');
+        const pointNumber = 500;
+        const rectSize = 500;
+        
+        //Seed de generation
+        Math.seedrandom('coucou');
 
-    //Création des points
-    for(var i =0; i<pointNumber;i++){
-        var x = Math.random() * rectSize;
-        var y = Math.random() * rectSize;
-        var pointtemp = {x:((x + "").split('.')[0]), y:((y+"").split('.')[0])};
+        ctx.beginPath();
 
-        var Rtemp = ((Math.random() * 255)+"").split('.')[0]
-        var Vtemp = ((Math.random() * 255)+"").split('.')[0]
-        var Btemp = ((Math.random() * 255)+"").split('.')[0]
-        var RVBtemp ={R:Rtemp,V:Vtemp,B:Btemp};
-        pointComplet = {point:pointtemp, rvb:RVBtemp}
-        myPoints.push(pointComplet)
+        myPoints = generatePointsAndColor(rectSize,pointNumber);
+        
+        generateInfluenceZone(ctx, rectSize, myPoints)
+        
 
-        //create point
-        ctx.strokeRect(pointtemp.x,pointtemp.y ,1,1);
-        ctx.fillRect(pointtemp.x ,pointtemp.y ,1,1);
+        myPoints.forEach(function(pointComplet){
+            createPoint(pointComplet.point, ctx)
+        })
+        
+        ctx.stroke();
     }
 
+    function createPoint(point, ctx){
+        ctx.strokeRect(point.x,point.y ,1,1);
+        ctx.fillRect(point.x ,point.y ,1,1);
+    }
 
-    for(var i = 0; i<rectSize;i++){
-        for(var j = 0; j<rectSize;j++){
-            var plusprochePoint;
-            var distance=10000000;
-            myPoints.forEach(function(pointComplet){
-                var dist = Math.abs(Math.sqrt(Math.pow(i-pointComplet.point.x,2)+Math.pow(j-pointComplet.point.y,2)))
-                if(dist<=distance){
-                    distance=dist;
-                    plusprochePoint = pointComplet;
-                }
-            })
-            ctx.strokeRect(i,j ,0,0);
-            ctx.fillStyle = 'rgb('+plusprochePoint.rvb.R+', '+plusprochePoint.rvb.V+', '+plusprochePoint.rvb.B+')';
-            //ctx.fillStyle = 'rgb(255,255,255)';
+    function generatePointsAndColor(rectSize,pointNumber){
+        let myPoints = [];
 
-            ctx.fillRect(i ,j ,1,1);
+        for(let i =0; i<pointNumber;i++){
+            const x = Math.random() * rectSize;
+            const y = Math.random() * rectSize;
+            const pointtemp = {x:((x + "").split('.')[0]), y:((y+"").split('.')[0])};
+
+            const Rtemp = ((Math.random() * 255)+"").split('.')[0]
+            const Vtemp = ((Math.random() * 255)+"").split('.')[0]
+            const Btemp = ((Math.random() * 255)+"").split('.')[0]
+            const RVBtemp ={R:Rtemp,V:Vtemp,B:Btemp};
+            pointComplet = {point:pointtemp, rvb:RVBtemp}
+            myPoints.push(pointComplet)
+        }
+
+        return myPoints
+    }
+
+    function generateInfluenceZone(ctx, rectSize, myPoints){
+        for(let i = 0; i<rectSize;i++){
+            for(let j = 0; j<rectSize;j++){
+                let plusprochePoint;
+                let distance=10000000;
+                myPoints.forEach(function(pointComplet){
+                    let dist = Math.abs(Math.sqrt(Math.pow(i-pointComplet.point.x,2)+Math.pow(j-pointComplet.point.y,2)))
+                    if(dist<=distance){
+                        distance=dist;
+                        plusprochePoint = pointComplet;
+                    }
+                })
+                ctx.strokeRect(i,j ,0,0);
+                ctx.fillStyle = 'rgb('+plusprochePoint.rvb.R+', '+plusprochePoint.rvb.V+', '+plusprochePoint.rvb.B+')';
+
+                ctx.fillRect(i ,j ,1,1);
+            }
         }
     }
-    ctx.stroke();
-}
+    mapGenerator.draw = draw;
+})();
+
