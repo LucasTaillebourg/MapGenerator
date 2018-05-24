@@ -4,6 +4,27 @@ window.mapGenerator = mapGenerator;
 
    
 (function(){
+
+    function WIP(){
+
+        //Renvoie l'ordonnée à l'origine et le coef dir de la médiatrice entre 2 points.
+        //p1 et p2 sont des MapGeneratorPoint
+        function mediatrice(a, b){
+            
+            //on creer le point entre les deux
+            let c = new MapGeneratorPoint((a.x + b.x) /2, (a.y + b.y) /2 );
+
+            let coefDirBissectrice = - (b.x-a.x)/(b.y-a.y);
+
+            let ordoneeOrig = (c.y - c.x) * coefDirBissectrice
+
+            return {coefDir:coefDirBissectrice, ordOrig:ordoneeOrig};
+        }
+
+        
+
+
+    }
     function draw() {
         let myPoints = [];
         let voronoiBorders = [];
@@ -20,7 +41,6 @@ window.mapGenerator = mapGenerator;
         myPoints = generatePointsAndColor(rectSize,pointNumber);
         
         generateInfluenceZone(ctx, rectSize, myPoints)
-        
 
         myPoints.forEach(function(pointComplet){
             createPoint(pointComplet.point, ctx)
