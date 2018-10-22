@@ -1,5 +1,7 @@
 import { MapGeneratorPoint } from "./classes"
 
+//ctrl + shift + b 
+
 export class MapGenerator {
     private _context: CanvasRenderingContext2D
     private _canvas: HTMLCanvasElement
